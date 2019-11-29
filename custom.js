@@ -22,9 +22,17 @@ $( document ).ready(function() {
             }
         });
 
+        function highlightCell (cell, index) {
+            var element = $("<strong></strong>");
+            $(element).html( "" + $(cell).text());
+            $(cell).html("");
+            $(cell).append(element);
+            $(cell).addClass("highlighted");
+        }
+
         function handleWin(winnerCells) {
             winner = $(winnerCells[0]).attr("class");
-            //TODO highlight cells
+            winnerCells.forEach(highlightCell);
             return winner;
         }
 
