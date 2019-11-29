@@ -5,8 +5,11 @@ $( document ).ready(function() {
             grid = $("#grid"),
             cells = $("td"),
             message = $("#msg"),
-            finished,
+            finished = false,
             winner,
+            rows = [[0, 3, 6], [1, 4, 7], [2, 5, 8],
+                [0, 1, 2], [3, 4, 5], [6, 7, 8],
+                [0, 4, 8], [2, 4, 6]],
             messages = {
                 "o's-turn": "It's the computer's turn.",
                 "x's-turn": "It's your turn.",
@@ -37,40 +40,16 @@ $( document ).ready(function() {
         }
 
         function checkForWinner() {
-            for (i = 0; i < 3; i++) {
-                // vertical
-                if (cellIsMarked(cells[i])
-                    && $(cells[3+i]).hasClass($(cells[i]).attr("class"))
-                    && $(cells[6+i]).hasClass($(cells[3+i]).attr("class"))
+            for(i = 0; i < rows.length; i++) {
+                if (cellIsMarked(cells[rows[i][0]])
+                    && $(cells[rows[i][1]]).hasClass($(cells[rows[i][0]]).attr("class"))
+                    && $(cells[rows[i][2]]).hasClass($(cells[rows[i][1]]).attr("class"))
                 ) {
-                    return handleWin([cells[i], cells[3+i], cells[6+i]]) ;
+                    return handleWin([cells[rows[i][0]], cells[rows[i][1]], cells[rows[i][2]]]) ;
                 }
-
-                // horizontal
-                if (cellIsMarked(cells[i*3])
-                    && $(cells[i*3 + 1]).hasClass($(cells[i*3]).attr("class"))
-                    && $(cells[i*3 + 2]).hasClass($(cells[i*3 + 1]).attr("class"))
-                ) {
-                    return handleWin([cells[i*3], cells[i*3+1], cells[i*3+2]]) ;
-                }
-            }
-
-            // diagonal from top left to right bottom
-            if (cellIsMarked(cells[0])
-                && $(cells[4]).hasClass($(cells[0]).attr("class"))
-                && $(cells[8]).hasClass($(cells[4]).attr("class"))
-            ) {
-                return handleWin([cells[0], cells[4], cells[8]]) ;
-            }
-
-            // diagonal from right top to left bottom
-            if (cellIsMarked(cells[2])
-                && $(cells[4]).hasClass($(cells[2]).attr("class"))
-                && $(cells[6]).hasClass($(cells[4]).attr("class"))
-            ) {
-                return handleWin([cells[2], cells[4], cells[6]]) ;
             }
         }
+
         function checkGrid() {
             var allCellsMarked = true, i, winner;
 
@@ -123,47 +102,24 @@ $( document ).ready(function() {
             while (true) {
                 var x = Math.round(Math.random() * 2),
                     y = Math.round(Math.random() * 2);
-                console.log(x + "_" + y);
+                console.log(y + "_" + x);
 
                 var cell = $("#"+y+"_"+x);
                 if (!cellIsMarked(cell)) {
+                    console.log('is not marked');
                     return cell;
                 }
+                console.log('is marked');
             }
         }
 
         function aiGetCriticalCell() {
-            var criticalCell;
-
-            for (i = 0; i < 3; i++) {
-
-                //vertical
-                criticalCell = checkRowForCriticalCell([cells[i], cells[3 + i], cells[6 + i]]);
-
+            var criticalCell = null;
+            for(i = 0; i < rows.length; i++) {
+                criticalCell = checkRowForCriticalCell([cells[rows[i][0]], cells[rows[i][1]], cells[rows[i][2]]]);
                 if(criticalCell != null) {
                     return criticalCell;
                 }
-
-                // horizontal
-                criticalCell = checkRowForCriticalCell([cells[i*3], cells[i*3 + 1], cells[i*3 + 2]]);
-
-                if(criticalCell != null) {
-                    return criticalCell;
-                }
-            }
-
-            // diagonal from top left to right bottom
-            criticalCell = checkRowForCriticalCell([cells[0], cells[4], cells[8]]);
-
-            if(criticalCell != null) {
-                return criticalCell;
-            }
-
-            // diagonal from right top to left bottom
-            criticalCell = checkRowForCriticalCell([cells[2], cells[4], cells[6]]);
-
-            if(criticalCell != null) {
-                return criticalCell;
             }
         }
 
@@ -194,9 +150,9 @@ $( document ).ready(function() {
                 }
             }
         }
-        
+
         function markCellByAi() {
-            var cell = aiGetCriticalCell();
+            var cell = null; //aiGetCriticalCell();
 
             if(cell == null)
             {
@@ -207,6 +163,7 @@ $( document ).ready(function() {
             if (!cellIsMarked(cell)) {
                 $(cell).addClass('o');
                 $(cell).html('o');
+                console.log("marked");
 
                 handleMark();
             } else {
