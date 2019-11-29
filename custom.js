@@ -20,6 +20,19 @@ $( document ).ready(function() {
             markCellByAi();
         });
 
+        function checkGrid() {
+            //TODO: check grid
+        }
+
+        function handleMark() {
+            checkGrid();
+
+            if (!finished) {
+                currentPlayerIndex = 1 - currentPlayerIndex; // switch between 0 and 1
+                $(message).html(messages[players[currentPlayerIndex] + "'s-turn"]);
+            }
+        }
+
         function markCellByAi() {
             var abort = false;
             while (!abort) {
@@ -31,6 +44,7 @@ $( document ).ready(function() {
                 if (!cellIsMarked(cell)) {
                     $(cell).addClass('o');
                     $(cell).html('o');
+                    handleMark();
                     abort = true;
                 } else {
                     console.log("already marked");
@@ -48,6 +62,7 @@ $( document ).ready(function() {
             if (!cellIsMarked(cell)) {
                 $(cell).addClass('x');
                 $(cell).html('x');
+                handleMark();
             } else {
                 console.log("Error! Already marked");
             }
