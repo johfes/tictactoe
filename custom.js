@@ -119,22 +119,38 @@ $( document ).ready(function() {
             }
         }
 
-        function markCellByAi() {
-            var abort = false;
-            while (!abort) {
+        function aiGetRandomCell() {
+            while (true) {
                 var x = Math.round(Math.random() * 2),
                     y = Math.round(Math.random() * 2);
                 console.log(x + "_" + y);
 
                 var cell = $("#"+y+"_"+x);
                 if (!cellIsMarked(cell)) {
-                    $(cell).addClass('o');
-                    $(cell).html('o');
-                    handleMark();
-                    abort = true;
-                } else {
-                    console.log("already marked");
+                    return cell;
                 }
+            }
+        }
+
+        function aiGetCriticalCell() {
+            //TODO implement
+        }
+        function markCellByAi() {
+            var cell = aiGetCriticalCell();
+
+            if(cell == null)
+            {
+                console.log("no critical cell found");
+                cell = aiGetRandomCell();
+            }
+
+            if (!cellIsMarked(cell)) {
+                $(cell).addClass('o');
+                $(cell).html('o');
+
+                handleMark();
+            } else {
+                console.log("already marked");
             }
         }
 
