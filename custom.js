@@ -21,7 +21,7 @@ $( document ).ready(function() {
             markCell();
 
             if(!finished) {
-                markCellByAi();
+                aiMarkCell();
             }
         });
 
@@ -116,7 +116,7 @@ $( document ).ready(function() {
         function aiGetCriticalCell() {
             var criticalCell = null;
             for(i = 0; i < rows.length; i++) {
-                criticalCell = checkRowForCriticalCell([cells[rows[i][0]], cells[rows[i][1]], cells[rows[i][2]]], "block");
+                criticalCell = aiCheckRowForCriticalCell([cells[rows[i][0]], cells[rows[i][1]], cells[rows[i][2]]], "block");
                 if(criticalCell != null) {
                     return criticalCell;
                 }
@@ -126,14 +126,14 @@ $( document ).ready(function() {
         function aiGetCellWithPossibilityToWin() {
             var possibleWinningCell = null;
             for(i = 0; i < rows.length; i++) {
-                possibleWinningCell = checkRowForPossibleWinningCell([cells[rows[i][0]], cells[rows[i][1]], cells[rows[i][2]]]);
+                possibleWinningCell = aiCheckRowForPossibleWinningCell([cells[rows[i][0]], cells[rows[i][1]], cells[rows[i][2]]]);
                 if(possibleWinningCell != null) {
                     return possibleWinningCell;
                 }
             }
         }
 
-        function checkRowForPossibleWinningCell(rowElements) {
+        function aiCheckRowForPossibleWinningCell(rowElements) {
             if($(rowElements[0]).hasClass("x")  || $(rowElements[1]).hasClass("x")
                 || $(rowElements[2]).hasClass("x")) {
                 return null;
@@ -146,7 +146,7 @@ $( document ).ready(function() {
             }
         }
 
-        function checkRowForCriticalCell(rowElements, mode)
+        function aiCheckRowForCriticalCell(rowElements, mode)
         {
             var markerToIgnore,
                 markerToSearchFor;
@@ -188,14 +188,14 @@ $( document ).ready(function() {
         function aiGetWinningCell() {
             var winningCell = null;
             for(i = 0; i < rows.length; i++) {
-                winningCell = checkRowForCriticalCell([cells[rows[i][0]], cells[rows[i][1]], cells[rows[i][2]]], "win");
+                winningCell = aiCheckRowForCriticalCell([cells[rows[i][0]], cells[rows[i][1]], cells[rows[i][2]]], "win");
                 if(winningCell != null) {
                     return winningCell;
                 }
             }
         }
 
-        function markCellByAi() {
+        function aiMarkCell() {
             var cellToMark = aiGetWinningCell();
 
             if(cellToMark == null)
@@ -228,10 +228,6 @@ $( document ).ready(function() {
 
         function cellIsMarked(cell) {
             return $(cell).hasClass("o") || $(cell).hasClass("x");
-        }
-
-        function cellIsMarkedBy(cell, clazz) {
-            return $(cell).hasClass(clazz + "");
         }
 
         function markCell() {
