@@ -17,11 +17,51 @@ $( document ).ready(function() {
         $("td").click(function() {
             markCell();
 
-            markCellByAi();
+            if(!finished) {
+                markCellByAi();
+            }
         });
 
+        function checkForWinner() {
+            //TODO implement
+        }
         function checkGrid() {
-            //TODO: check grid
+            var allCellsMarked = true, i, winner;
+
+            // all cells marked?
+            for (i = 0; i < cells.length; i++) {
+
+                if (!cellIsMarked(cells[i])) {
+                    allCellsMarked = false;
+                }
+            }
+
+            winner = checkForWinner();
+
+            // game finished?
+            if (allCellsMarked || winner) {
+                finished = true;
+                grid.addClass("finished");
+
+                if (winner) {
+                    message.html(messages[players[current] + "-wins"]);
+                } else {
+                    message.html("The game finished with a draw.");
+                }
+
+                // remove game listener
+                $("td").prop("onclick", null).off("click");
+
+                // new game?
+                var button = $("<button></button>");
+                $(button).html("New Game");
+                message.append(button);
+
+                $(button).click(function() {
+                    // reset game
+                    location.reload();
+                });
+            }
         }
 
         function handleMark() {
