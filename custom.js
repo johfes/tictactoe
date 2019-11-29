@@ -16,12 +16,36 @@ $( document ).ready(function() {
 
         $("td").click(function() {
             markCell();
+
+            markCellByAi();
         });
+
+        function markCellByAi() {
+            var abort = false;
+            while (!abort) {
+                var x = Math.round(Math.random() * 2),
+                    y = Math.round(Math.random() * 2);
+                console.log(x + "_" + y);
+
+                var cell = $("#"+y+"_"+x);
+                if (!cellIsMarked(cell)) {
+                    $(cell).addClass('o');
+                    $(cell).html('o');
+                    abort = true;
+                } else {
+                    console.log("already marked");
+                }
+            }
+        }
+
+        function cellIsMarked(cell) {
+            return $(cell).hasClass("o") || $(cell).hasClass("x");
+        }
 
         function markCell() {
             var cell = event.target;
 
-            if (!$(cell).hasClass("o") && !$(cell).hasClass("x")) {
+            if (!cellIsMarked(cell)) {
                 $(cell).addClass('x');
                 $(cell).html('x');
             } else {
