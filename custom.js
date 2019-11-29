@@ -116,7 +116,7 @@ $( document ).ready(function() {
         function aiGetCriticalCell() {
             var criticalCell = null;
             for(i = 0; i < rows.length; i++) {
-                criticalCell = checkRowForCriticalCell([cells[rows[i][0]], cells[rows[i][1]], cells[rows[i][2]]]);
+                criticalCell = checkRowForCriticalCell([cells[rows[i][0]], cells[rows[i][1]], cells[rows[i][2]]], "block");
                 if(criticalCell != null) {
                     return criticalCell;
                 }
@@ -146,28 +146,39 @@ $( document ).ready(function() {
             }
         }
 
-        function checkRowForCriticalCell(rowElements)
+        function checkRowForCriticalCell(rowElements, mode)
         {
-            if($(rowElements[0]).hasClass("o")  || $(rowElements[1]).hasClass("o")
-                || $(rowElements[2]).hasClass("o")) {
+            var markerToIgnore,
+                markerToSearchFor;
+            if(mode == "win") {
+                markerToIgnore = 'o';
+                markerToSearchFor = 'x';
+            } else {
+                markerToIgnore = 'x';
+                markerToSearchFor = 'o';
+            }
+
+            if($(rowElements[0]).hasClass(markerToIgnore + "")
+                || $(rowElements[1]).hasClass(markerToIgnore + "")
+                || $(rowElements[2]).hasClass(markerToIgnore + "")) {
                 return null;
             }
 
-            var firstIsMarkedByOpponent = $(rowElements[0]).hasClass("x");
-            var secondIsMarkedByOpponent = $(rowElements[1]).hasClass("x");
-            var thirdIsMarkedByOpponent = $(rowElements[2]).hasClass("x");
+            var firstIsMarked = $(rowElements[0]).hasClass(markerToSearchFor + "");
+            var secondIsMarked = $(rowElements[1]).hasClass(markerToSearchFor + "");
+            var thirdIsMarked = $(rowElements[2]).hasClass(markerToSearchFor + "");
 
-            if (firstIsMarkedByOpponent || secondIsMarkedByOpponent || thirdIsMarkedByOpponent) {
-                if(firstIsMarkedByOpponent)
+            if (firstIsMarked || secondIsMarked || thirdIsMarked) {
+                if(firstIsMarked)
                 {
-                    if(secondIsMarkedByOpponent) {
+                    if(secondIsMarked) {
                         return rowElements[2];
-                    } else if(thirdIsMarkedByOpponent) {
+                    } else if(thirdIsMarked) {
                         return rowElements[1];
                     }
-                } else if(secondIsMarkedByOpponent)
+                } else if(secondIsMarked)
                 {
-                    if(thirdIsMarkedByOpponent) {
+                    if(thirdIsMarked) {
                         return rowElements[0];
                     }
                 }
@@ -177,36 +188,9 @@ $( document ).ready(function() {
         function aiGetWinningCell() {
             var winningCell = null;
             for(i = 0; i < rows.length; i++) {
-                winningCell = aiCheckRowForWinningCell([cells[rows[i][0]], cells[rows[i][1]], cells[rows[i][2]]]);
+                winningCell = checkRowForCriticalCell([cells[rows[i][0]], cells[rows[i][1]], cells[rows[i][2]]], "win");
                 if(winningCell != null) {
                     return winningCell;
-                }
-            }
-        }
-
-        function aiCheckRowForWinningCell(rowElements) {
-            if($(rowElements[0]).hasClass("x")  || $(rowElements[1]).hasClass("x")
-                || $(rowElements[2]).hasClass("x")) {
-                return null;
-            }
-
-            var firstIsMarkedByAi = $(rowElements[0]).hasClass("o");
-            var secondIsMarkedByAi = $(rowElements[1]).hasClass("o");
-            var thirdIsMarkedByAi = $(rowElements[2]).hasClass("o");
-
-            if (firstIsMarkedByAi || secondIsMarkedByAi || thirdIsMarkedByAi) {
-                if(firstIsMarkedByAi)
-                {
-                    if(secondIsMarkedByAi) {
-                        return rowElements[2];
-                    } else if(thirdIsMarkedByAi) {
-                        return rowElements[1];
-                    }
-                } else if(secondIsMarkedByAi)
-                {
-                    if(thirdIsMarkedByAi) {
-                        return rowElements[0];
-                    }
                 }
             }
         }
@@ -244,6 +228,10 @@ $( document ).ready(function() {
 
         function cellIsMarked(cell) {
             return $(cell).hasClass("o") || $(cell).hasClass("x");
+        }
+
+        function cellIsMarkedBy(cell, clazz) {
+            return $(cell).hasClass(clazz + "");
         }
 
         function markCell() {
