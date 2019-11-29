@@ -22,8 +22,46 @@ $( document ).ready(function() {
             }
         });
 
+        function handleWin(winnerCells) {
+            winner = $(winnerCells[0]).attr("class");
+            //TODO highlight cells
+            return winner;
+        }
+
         function checkForWinner() {
-            //TODO implement
+            for (i = 0; i < 3; i++) {
+                // vertical
+                if (cellIsMarked(cells[i])
+                    && $(cells[3+i]).hasClass($(cells[i]).attr("class"))
+                    && $(cells[6+i]).hasClass($(cells[3+i]).attr("class"))
+                ) {
+                    return handleWin([cells[i], cells[3+i], cells[6+i]]) ;
+                }
+
+                // horizontal
+                if (cellIsMarked(cells[i*3])
+                    && $(cells[i*3 + 1]).hasClass($(cells[i*3]).attr("class"))
+                    && $(cells[i*3 + 2]).hasClass($(cells[i*3 + 1]).attr("class"))
+                ) {
+                    return handleWin([cells[i*3], cells[i*3+1], cells[i*3+2]]) ;
+                }
+            }
+
+            // diagonal from top left to right bottom
+            if (cellIsMarked(cells[0])
+                && $(cells[4]).hasClass($(cells[0]).attr("class"))
+                && $(cells[8]).hasClass($(cells[4]).attr("class"))
+            ) {
+                return handleWin([cells[0], cells[4], cells[8]]) ;
+            }
+
+            // diagonal from right top to left bottom
+            if (cellIsMarked(cells[2])
+                && $(cells[4]).hasClass($(cells[2]).attr("class"))
+                && $(cells[6]).hasClass($(cells[4]).attr("class"))
+            ) {
+                return handleWin([cells[2], cells[4], cells[6]]) ;
+            }
         }
         function checkGrid() {
             var allCellsMarked = true, i, winner;
@@ -44,7 +82,7 @@ $( document ).ready(function() {
                 grid.addClass("finished");
 
                 if (winner) {
-                    message.html(messages[players[current] + "-wins"]);
+                    message.html(messages[players[currentPlayerIndex] + "-wins"]);
                 } else {
                     message.html("The game finished with a draw.");
                 }
