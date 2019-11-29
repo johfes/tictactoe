@@ -133,8 +133,68 @@ $( document ).ready(function() {
         }
 
         function aiGetCriticalCell() {
-            //TODO implement
+            var criticalCell;
+
+            for (i = 0; i < 3; i++) {
+
+                //vertical
+                criticalCell = checkRowForCriticalCell([cells[i], cells[3 + i], cells[6 + i]]);
+
+                if(criticalCell != null) {
+                    return criticalCell;
+                }
+
+                // horizontal
+                criticalCell = checkRowForCriticalCell([cells[i*3], cells[i*3 + 1], cells[i*3 + 2]]);
+
+                if(criticalCell != null) {
+                    return criticalCell;
+                }
+            }
+
+            // diagonal from top left to right bottom
+            criticalCell = checkRowForCriticalCell([cells[0], cells[4], cells[8]]);
+
+            if(criticalCell != null) {
+                return criticalCell;
+            }
+
+            // diagonal from right top to left bottom
+            criticalCell = checkRowForCriticalCell([cells[2], cells[4], cells[6]]);
+
+            if(criticalCell != null) {
+                return criticalCell;
+            }
         }
+
+        function checkRowForCriticalCell(rowElements)
+        {
+            if($(rowElements[0]).hasClass("o")  || $(rowElements[1]).hasClass("o")
+                || $(rowElements[2]).hasClass("o")) {
+                return null;
+            }
+
+            var firstIsMarkedBxOpponent = $(rowElements[0]).hasClass("x");
+            var secondIsMarkedByOpponent = $(rowElements[1]).hasClass("x");
+            var thirdIsMarkedByOpponent = $(rowElements[2]).hasClass("x");
+
+            if (firstIsMarkedBxOpponent || secondIsMarkedByOpponent || thirdIsMarkedByOpponent) {
+                if(firstIsMarkedBxOpponent)
+                {
+                    if(secondIsMarkedByOpponent) {
+                        return rowElements[2];
+                    } else if(thirdIsMarkedByOpponent) {
+                        return rowElements[1];
+                    }
+                } else if(secondIsMarkedByOpponent)
+                {
+                    if(thirdIsMarkedByOpponent) {
+                        return rowElements[0];
+                    }
+                }
+            }
+        }
+        
         function markCellByAi() {
             var cell = aiGetCriticalCell();
 
