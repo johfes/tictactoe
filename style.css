@@ -1,5 +1,5 @@
 /*
-    CSS from https://wiki.selfhtml.org/wiki/JavaScript/Tutorials/Spiele/Tic-Tac-Toe
+    customized CSS from https://wiki.selfhtml.org/wiki/JavaScript/Tutorials/Spiele/Tic-Tac-Toe
  */
 
 .tic-tac-toe table {
@@ -63,6 +63,6 @@
     text-shadow: 0 0 1px #fff, 0 0 2px #fff, 0 0 3px #fff, 0 0 4px white, 0 0 5px white, 0 0 6px white, 0 0 7px white;
 }
 
-.tic-tac-toe .game-over {
+.tic-tac-toe .finished {
     border-color: red;
 }
