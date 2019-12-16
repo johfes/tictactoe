@@ -134,8 +134,8 @@ $( document ).ready(function() {
         }
 
         function aiCheckRowForPossibleWinningCell(rowElements) {
-            if($(rowElements[0]).hasClass("x")  || $(rowElements[1]).hasClass("x")
-                || $(rowElements[2]).hasClass("x")) {
+            if($(rowElements[0]).hasClass("o")  || $(rowElements[1]).hasClass("o")
+                || $(rowElements[2]).hasClass("o")) {
                 return null;
             }
 
